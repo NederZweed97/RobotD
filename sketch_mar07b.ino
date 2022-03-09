@@ -1,3 +1,6 @@
+//This code makes the robot drive over thin lines. 
+// On the display the values that the LDR picks up will be shown. These values are used to see if the robot follows the line. 
+
 #include <Arduino.h>
 #include <analogWrite.h>
 #include <Adafruit_SSD1306.h>
@@ -38,7 +41,7 @@ void setup() {
  
   display.display();
   delay(2000);
- 
+
   pinMode(forwardLeft, OUTPUT);
   pinMode(forwardRight, OUTPUT);
   pinMode(reverseLeft, OUTPUT);
@@ -57,7 +60,7 @@ void loop() {
   display.setCursor(15, 20);
   drawText("Right: " + String(valueLdrLeft), 1);
   display.display();
- 
+
   if(valueLdrLeft > 65 && valueLdrRight > 65) {
      moveForward();
  
@@ -74,7 +77,9 @@ void loop() {
  
   display.clearDisplay();
 }
- 
+
+// These are the functions that are used in the code above.
+
 void drawText(String value, int delaySeconds) {
   display.setTextSize(1);
   display.setTextColor(WHITE);
