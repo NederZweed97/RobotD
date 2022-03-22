@@ -98,37 +98,39 @@ void drawText(String value, int delaySeconds) {
   display.setTextColor(WHITE);
   display.println(value);
 }
- 
-void moveForward() {
-  analogWrite(forwardLeft, 170);
-  analogWrite(forwardRight, 166);
-  analogWrite(reverseLeft, LOW);
-  analogWrite(reverseRight, LOW);
+
+void drive(int fL, int fR, int rL, int rR){
+  analogWrite(forwardLeft, fL);
+  analogWrite(forwardRight, fR);
+  analogWrite(reverseLeft, rL);
+  analogWrite(reverseRight, rR);
 }
- 
-void correctToTheLeft() {
-  analogWrite(forwardLeft, LOW);
-  analogWrite(forwardRight, 180);
-  analogWrite(reverseLeft, LOW);
-  analogWrite(reverseRight, LOW);
+
+void moveForward() {
+   drive(170, 166, LOW, LOW);
+}
+
+void uTurn(){
+    turnLeft();
+  delay(280);
+  stopVehicle();
+  delay(500);
+}
+
+void correctToTheRight() {
+  drive(180, LOW, LOW, LOW);
   delay(40);
   stopVehicle();
 }
- 
-void correctToTheRight() {
-  analogWrite(forwardLeft, 180);
-  analogWrite(forwardRight, LOW);
-  analogWrite(reverseLeft, LOW);
-  analogWrite(reverseRight, LOW);
+
+void correctToTheLeft() {
+   drive(LOW, 180, LOW, LOW);
   delay(40);
   stopVehicle();
 }
  
 void stopVehicle() {
-  analogWrite(forwardLeft, LOW);
-  analogWrite(forwardRight, LOW);
-  analogWrite(reverseLeft, LOW);
-  analogWrite(reverseRight, LOW);
+  drive(LOW, LOW, LOW, LOW);
 }
  
 boolean turnRight(){
@@ -136,10 +138,7 @@ boolean turnRight(){
   delay(700);
   moveForward();
   delay(200);
-  analogWrite(forwardLeft, 180);
-  analogWrite(forwardRight, LOW);
-  analogWrite(reverseLeft, LOW);
-  analogWrite(reverseRight, 180);
+  drive(180, LOW, LOW, 180);
   delay(500);
   moveForward();
   delay(100);
@@ -148,21 +147,11 @@ boolean turnRight(){
   return false;
 }
 boolean turnLeft(){
-  analogWrite(forwardLeft, LOW);
-  analogWrite(forwardRight, 180);
-  analogWrite(reverseLeft, 180);
-  analogWrite(reverseRight, LOW);
+  drive(LOW, 180, 180, LOW);
   delay(400);
   return false;
 }
 
 boolean makeFalse(){
   return false;
-}
-void uTurn(){
-    turnLeft();
-  delay(280);
-  stopVehicle();
-  delay(500);
-  
 }
