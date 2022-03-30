@@ -1,4 +1,4 @@
-//This code makes the robot drive over thin lines. 
+  //This code makes the robot drive over thin lines. 
  // On the display the values that the LDR picks up will be shown. These values are used to see if the robot follows the line. 
 
  #include <Arduino.h>
@@ -79,6 +79,10 @@
 
    if (valueLdrLeft > 120 && valueLdrRight > 120){ 
      moveBackwards();
+   }
+
+   if(valueLdrLeft < 40 && valueLdrRight < 40){
+     stopVehicle();
    }
 
 
