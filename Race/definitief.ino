@@ -93,37 +93,29 @@
    display.setTextColor(WHITE);
    display.println(value);
  }
+void drive(int fL, int fR, int rL, int rR){
+  analogWrite(forwardLeft, fL);
+  analogWrite(forwardRight, fR);
+  analogWrite(reverseLeft, rL);
+  analogWrite(reverseRight, rR);
+}
 
  void moveForward() {
-   analogWrite(forwardLeft, 225);
-   analogWrite(forwardRight, 225);
-   analogWrite(reverseLeft, LOW);
-   analogWrite(reverseRight, LOW);
- }
+  drive(225, 225, LOW, LOW);
+}
+
  void moveBackwards() {
-   analogWrite(forwardLeft, LOW);
-   analogWrite(forwardRight, LOW);
-   analogWrite(reverseLeft, 200);
-   analogWrite(reverseRight, 200);
+   drive(LOW, LOW, 200, 200);
  }
 
  void turnRight() {
-   analogWrite(forwardLeft, LOW);
-   analogWrite(forwardRight, 220);
-   analogWrite(reverseLeft, LOW);
-   analogWrite(reverseRight, LOW);
+   drive(LOW, 220, LOW, LOW);
  }
 
  void turnLeft() {
-   analogWrite(forwardLeft, 220);
-   analogWrite(forwardRight, LOW);
-   analogWrite(reverseLeft, LOW);
-   analogWrite(reverseRight, LOW);
+   drive(220, LOW, LOW, LOW);
  }
 
  void stopVehicle() {
-   analogWrite(forwardLeft, LOW);
-   analogWrite(forwardRight, LOW);
-   analogWrite(reverseLeft, LOW);
-   analogWrite(reverseRight, LOW);
+   drive(LOW, LOW, LOW, LOW);
  }
