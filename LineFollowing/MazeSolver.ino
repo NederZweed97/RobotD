@@ -75,6 +75,9 @@ void loop() {
     turnValueRight = true;
     Serial.print(turnValueRight);
     turnLeft();
+    if(sensorValueR > 3000 && sensorValueL > 3000){
+      turnBack();
+    }
     turnValueRight = makeFalse();
     Serial.print(turnValueRight);
   }else if(sensorValueR < greyMin && sensorValueL > greyMin){ // CORRECT left
@@ -152,6 +155,12 @@ boolean turnLeft(){
   return false;
 }
 
+boolean turnBack(){
+turnRight();
+delay(400);
+moveForward();
+delay(500);
+}
 boolean makeFalse(){
   return false;
 }
