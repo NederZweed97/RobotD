@@ -35,12 +35,14 @@ bool isLoggedIn;
 bool isPreparing = false;
 bool isStarting = false;
 bool isFinished = false;
+// These values have to be update by the game script.
+bool isDriving = false;
 String currentGame = "";
 String robotStatus = "preparing";
+int acceleration = 0;
 
 unsigned long previousMillis = 0;
 const long interval = 5000;
-int acceleration = 0;
 
 void setup() {
   Serial.begin(9600);
@@ -92,14 +94,13 @@ void loop() {
 
       doc.clear();
       doc["status"] = robotStatus;
-      doc["isDriving"] = false;
+      doc["isDriving"] = isDriving;
       doc["acceleration"] = acceleration;
 
       char statusUpdate[100];
       serializeJsonPretty(doc, statusUpdate);
 
       webSocket.sendTXT(statusUpdate);
-      Serial.println("Send update");
   }
 
     if(isPreparing) {
