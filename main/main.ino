@@ -23,7 +23,6 @@ const char* password = "truppy123";
 
 // Websocket information here.
 const char host[] = "battlebot1.serverict.nl";
-const char path[] = "";
 const int port = 33003;
 
 WiFiClient client;
@@ -31,18 +30,27 @@ WebSocketsClient webSocket;
 StaticJsonDocument<96> doc;
 
 // Robot state
-bool isLoggedIn;
+bool isLoggedIn = false;
 bool isPreparing = false;
 bool isStarting = false;
 bool isFinished = false;
+
 // These values have to be update by the game script.
-bool isDriving = false;
 String currentGame = "";
 String robotStatus = "preparing";
+bool isDriving = false;
 int acceleration = 0;
 
 unsigned long previousMillis = 0;
 const long interval = 5000;
+
+
+int ldrLeft = 34;
+int ldrRight = 39;
+int forwardLeft = 18;
+int forwardRight = 16;
+int reverseLeft = 5;
+int reverseRight = 17;
 
 void setup() {
   Serial.begin(9600);
@@ -61,9 +69,8 @@ void setup() {
     Serial.print(".");
     drawText("Connecting...", true, 10, 10 , 1);
   }
-  display.clearDisplay();
 
-  drawText("WiFi connected", false, 10, 9, 1);
+  drawText("WiFi connected", true, 10, 9, 1);
   drawText("IP:" + WiFi.localIP().toString(), false, 0, 20, 1);
   display.startscrollleft(2, 3);
   display.display();
@@ -81,7 +88,7 @@ void setup() {
 
   // try ever 5000 again if connection has failed
   webSocket.setReconnectInterval(5000);
-  webSocket.enableHeartbeat(15000, 3000, 2);
+  webSocket.enableHeartbeat(5000, 5000, 2);
 }
 
 void loop() {
@@ -103,22 +110,22 @@ void loop() {
       webSocket.sendTXT(statusUpdate);
   }
 
-    if(isPreparing) {
-      doc.clear();
-      doc["status"] = true;
-      doc["game"] = currentGame;
+  if(isPreparing) {
+    doc.clear();
+    doc["status"] = true;
+    doc["game"] = currentGame;
 
-      char prepStatus[100];
-      serializeJsonPretty(doc, prepStatus);
+    char prepStatus[100];
+    serializeJsonPretty(doc, prepStatus);
 
-      webSocket.sendTXT(prepStatus);
-      robotStatus = "ready";
-      isPreparing = false;        
-    }
+    webSocket.sendTXT(prepStatus);
+    robotStatus = "ready";
+    isPreparing = false;        
+  }
 
-    if(isStarting) {
-      startGame();
-    }
+  if(isStarting) {
+    startGame();
+  }
 }
 
 // Draw text to the arduino display.
@@ -144,7 +151,7 @@ void webSocketEvent(WStype_t type, uint8_t *payload, size_t length) {
 
     case WStype_CONNECTED:
       Serial.println("[WS] Connected");
-
+      robotStatus = "ready";
       doc.clear();
       doc["action"] = "login";
       doc["id"] = WiFi.macAddress();
@@ -208,6 +215,7 @@ void handleMessage(uint8_t *payload, int stageNumber) {
     } else if(action == "start" && game == currentGame) {
       isStarting = true;
     } else if(action == "ended") {
+      robotStatus = "ready";
       // Stop current game here.
       isStarting = false;
       isFinished = true;
@@ -223,7 +231,7 @@ void startGame() {
   
   if(currentGame == "race") {
     robotStatus = "in_game";
-    Serial.println("Start race");
+    startRace();
   }
 
   if(currentGame == "butler") {
