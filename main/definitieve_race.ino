@@ -44,7 +44,7 @@ void drive(int fL, int fR, int rL, int rR){
 }
 
 void moveForward() {
-  drive(235, 255, LOW, LOW);
+  drive(235, 235, LOW, LOW);
   bool isDriving = true;
 }
 
