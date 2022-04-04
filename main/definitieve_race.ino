@@ -44,7 +44,7 @@ void drive(int fL, int fR, int rL, int rR){
 }
 
 void moveForward() {
-  drive(225, 225, LOW, LOW);
+  drive(235, 255, LOW, LOW);
   bool isDriving = true;
 }
 
@@ -53,11 +53,11 @@ void moveBackwards() {
 }
 
 void turnRight() {
-  drive(LOW, 220, LOW, LOW);
+  drive(LOW, 225, LOW, LOW);
 }
 
 void turnLeft() {
-  drive(220, LOW, LOW, LOW);
+  drive(225, LOW, LOW, LOW);
 }
 
 void stopVehicle() {

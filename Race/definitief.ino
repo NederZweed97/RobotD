@@ -81,7 +81,7 @@
      moveBackwards();
    }
 
-   if(valueLdrLeft < 40 && valueLdrRight < 40){
+   if(valueLdrLeft == 0 && valueLdrRight == 0){
      stopVehicle();
    }
 
