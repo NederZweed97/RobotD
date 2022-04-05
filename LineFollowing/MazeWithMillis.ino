@@ -78,22 +78,27 @@ void loop() {
 
 if(action == "correctToLeft"){
   correctToTheLeft();
+  return;
 }
 
 if(action == "correctToRight"){
   correctToTheRight();
+  return;
 }
 
 if(action == "uTurn"){
   uTurn();
+  return;
 }
 
 if(action == "turnRight"){
   turnRight();
+  return;
 }
 
 if(action == "turnLeft"){
   turnLeft();
+  return;
 }
 
 
