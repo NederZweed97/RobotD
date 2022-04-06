@@ -17,6 +17,13 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 #define LOGO_HEIGHT   16
 #define LOGO_WIDTH    16
 
+int ldrLeft = 34;
+int ldrRight = 39;
+int forwardLeft = 18;
+int forwardRight = 16;
+int reverseLeft = 5;
+int reverseRight = 17;
+
 // Wifi information here.
 const char* ssid = "iPhone";
 const char* password = "truppy123";
@@ -46,6 +53,13 @@ const long interval = 5000;
 
 void setup() {
   Serial.begin(9600);
+
+   pinMode(forwardLeft, OUTPUT);
+   pinMode(forwardRight, OUTPUT);
+   pinMode(reverseLeft, OUTPUT);
+   pinMode(reverseRight, OUTPUT);
+   pinMode(ldrLeft, INPUT);
+   pinMode(ldrRight, INPUT);
 
   // SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
   if (!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
@@ -85,6 +99,7 @@ void setup() {
 }
 
 void loop() {
+  
   webSocket.loop();
 
   unsigned long currentMillis = millis();
@@ -119,7 +134,11 @@ void loop() {
     if(isStarting) {
       startGame();
     }
+
+    
+      
 }
+  
 
 // Draw text to the arduino display.
 void drawText(String tekst, bool clearDisp, int x, int y, int textSize) {
@@ -200,6 +219,8 @@ void handleMessage(uint8_t *payload, int stageNumber) {
     String action = json["action"];
     String game = json["game"];
 
+    Serial.println("Action: " + action);
+    Serial.println("Game: " + game);
     if(action == "prepare") {
       // Prepare the game here.
       isPreparing = true;
@@ -223,11 +244,68 @@ void startGame() {
   
   if(currentGame == "race") {
     robotStatus = "in_game";
-    Serial.println("Start race");
+    race();
   }
 
   if(currentGame == "butler") {
     robotStatus = "in_game";
     Serial.println("Start butler");
+  }
+}
+
+
+void drive(int fL, int fR, int rL, int rR){
+  analogWrite(forwardLeft, fL);
+  analogWrite(forwardRight, fR);
+  analogWrite(reverseLeft, rL);
+  analogWrite(reverseRight, rR);
+}
+  
+void moveForward() {
+  drive(225, 225, LOW, LOW);
+  bool isDriving = true;
+}
+
+void moveBackwards() {
+  drive(LOW, LOW, 200, 200);
+}
+
+void turnRight() {
+  drive(LOW, 220, LOW, LOW);
+}
+
+void turnLeft() {
+  drive(220, LOW, LOW, LOW);
+}
+
+void stopVehicle() {
+  drive(LOW, LOW, LOW, LOW);
+}
+
+void race() {
+  //Race code
+  int valueLdrLeft = analogRead(ldrLeft);
+  int valueLdrRight = analogRead(ldrRight);
+  
+  
+  if(valueLdrLeft < 120 && valueLdrRight < 120 ) {
+    moveForward();
+  } 
+  
+  if(valueLdrLeft < 120 && valueLdrRight > 120) {
+   turnRight();
+  } 
+  
+  if(valueLdrLeft > 120 && valueLdrRight < 120) {
+   turnLeft();   
+  } 
+  
+  if (valueLdrLeft > 120 && valueLdrRight > 120){ 
+   moveBackwards();
+  }
+  //finished
+  if(valueLdrLeft < 40 && valueLdrRight < 40){
+   stopVehicle();
+   bool robotStatus = "finished";
   }
 }
