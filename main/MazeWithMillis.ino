@@ -1,93 +1,86 @@
 #include <Arduino.h>
-void setupMaze() {
-  action = "";
-}
- 
+
+unsigned long timer1 = 0;
+unsigned long timer2 = 0;
+unsigned long timer3 = 0;
+unsigned long timer4 = 0;
+unsigned long timer5 = 0;
+unsigned long timer6 = 0;
+unsigned long timer7 = 0;
+unsigned long currentTime;
+
+int greyMin = 60;
+int greyMinR = 50;
+int greyMax = 300;
+int blackMin = 1000;
+
+String actionMaze = "";
+
 void startMaze() {
    display.clearDisplay(); 
   int sensorValueL = analogRead(ldrLeft);
   int sensorValueR = analogRead(ldrRight);
   currentTime = millis();
- 
- //Displays left and right LDR values on screen.
-  display.setCursor(15, 10);
-  drawText("R: " + String(sensorValueR), 1);
- 
-  display.setCursor(15, 20);
-  drawText("L: " + String(sensorValueL), 1);
-  display.display();
 
-if(action == "correctToLeft"){
+if(actionMaze == "correctToLeft"){
   correctToTheLeft();
   return;
 }
 
-if(action == "correctToRight"){
+if(actionMaze == "correctToRight"){
   correctToTheRight();
   return;
 }
 
-if(action == "uTurn"){
+if(actionMaze == "uTurn"){
   uTurn();
   return;
 }
 
-if(action == "turnRight"){
-  turnRight();
+if(actionMaze == "turnRight"){
+  turnRightMaze();
   return;
 }
 
-if(action == "turnLeft"){
-  turnLeft();
+if(actionMaze== "turnLeft"){
+  turnLeftMaze();
   return;
 }
 
 
   if(sensorValueR > 52 && sensorValueL < greyMin)
   { // CORRECT right
-    action = "correctToRight";
+    actionMaze = "correctToRight";
   }else if(sensorValueR < 52 && sensorValueL > greyMin)
   { //CORRECT left
-    action = "correctToLeft";
+    actionMaze = "correctToLeft";
   } else if(sensorValueR < 52 && sensorValueL < greyMin) {
-    moveForward();
+    moveForward(160, 160);
   }else if(sensorValueR > blackMin && sensorValueL > blackMin){
-    action = "turnLeft";
+    actionMaze = "turnLeft";
   } else if(sensorValueR > blackMin && sensorValueL < 400){//90 turn right
-    action = "turnRight"; 
+    actionMaze = "turnRight"; 
   }else if(sensorValueR < 400 && sensorValueL > blackMin){ //90 turn left
-    action = "turnLeft";
+    actionMaze = "turnLeft";
   }else if(sensorValueR > 75 && sensorValueR < 400 && sensorValueL > 70 && sensorValueL < 400){
-      action = "uTurn";
+      actionMaze = "uTurn";
   }else if(sensorValueL < 15 && sensorValueR < 15){
     stopVehicle();
     robotStatus = "finished";
     isDriving = false;
     isFinished = true;
   }
-
-
- 
 }
 
 // These are the functions that are used in the code above.
 
-void drawText(String value, int delaySeconds) {
+void drawText(String value) {
   display.setTextSize(1);
   display.setTextColor(WHITE);
   display.println(value);
 }
 
-void drive(int fL, int fR, int rL, int rR){
-  analogWrite(forwardLeft, fL);
-  analogWrite(forwardRight, fR);
-  analogWrite(reverseLeft, rL);
-  analogWrite(reverseRight, rR);
-}
 
-void moveForward() {
-   drive(160, 160, LOW, LOW);
-}
 
 void uTurn(){
   currentTime = millis();
@@ -100,7 +93,7 @@ void uTurn(){
       stopVehicle();
   }else{
     timer3 = 0;
-    action  = "";
+    actionMaze  = "";
   }
 }
 
@@ -113,7 +106,7 @@ void correctToTheRight() {
       drive(180, LOW, LOW, LOW);
   }else{
     timer1 = 0;
-    action  = "";
+    actionMaze  = "";
   }
 }
 void correctToTheLeft() {
@@ -125,76 +118,72 @@ void correctToTheLeft() {
       drive(LOW, 180, LOW, LOW);
   }else{
     timer7 = 0;
-    action  = "";
+    actionMaze  = "";
   }
 }
  
-void stopVehicle() {
-  drive(LOW, LOW, LOW, LOW);
-}
- 
-void turnRight(){
+void turnRightMaze(){
   if(timer4 == 0){
     timer4 = millis();
     currentTime = millis();
   }
   if(currentTime - timer4 < 40){
-      moveForward();
+      moveForward(160, 160);
   }else if(currentTime - timer4< 740){
       stopVehicle();
   }else if(currentTime - timer4< 1120){
-      moveForward();
+      moveForward(160, 160);
   }else if(currentTime - timer4< 1720){
       stopVehicle();
   }else if(currentTime - timer4< 2910){
        drive(170, LOW, LOW, 170);
   }else if(currentTime - timer4< 2960){
-       moveForward();
+       moveForward(160, 160);
   }else if(currentTime - timer4< 2960){
        stopVehicle();
   }else{
     timer4 = 0;
-    action  = "";
+    actionMaze  = "";
   }
 }
 
-void turnLeft(){
+void turnLeftMaze(){
   if(timer5 == 0){
     timer5 = millis();
     currentTime = millis();
   }
   if(currentTime - timer5 < 35){
-      moveForward();
+      moveForward(160, 160);
   }else if(currentTime - timer5< 735){
       stopVehicle();
   }else if(currentTime - timer5< 1115){
-      moveForward();
+      moveForward(160, 160);
   }else if(currentTime - timer5< 1715){
       stopVehicle();
   }else if(currentTime - timer5< 2915){
        drive(LOW, 170, 170, LOW);
   }else if(currentTime - timer5< 2955){
-       moveForward();
+       moveForward(160, 160);
   }else if(currentTime - timer5< 2955){
        stopVehicle();
   }else{
     timer5 = 0;
-    action  = ""; 
+    actionMaze  = ""; 
   }
 }
 
 
-void turnBack(){
+void turnBackMaze(){
   if(timer6 == 0){
     timer6 = millis();
     currentTime = millis();
   }
   if(currentTime - timer6< 400){
-      turnRight();
+      turnRightMaze();
   }else if (currentTime = timer6 < 900){
-    moveForward();
+    moveForward(160, 160);
   }else{
     timer6 = 0;
-    action  = "";
+    actionMaze  = "";
   }
 }

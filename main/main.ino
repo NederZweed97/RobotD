@@ -44,27 +44,12 @@ int acceleration = 0;
 unsigned long previousMillis = 0;
 const long interval = 5000;
 
-
-int ldrLeft = 39;
-int ldrRight = 34;
+int ldrLeft = 34;
+int ldrRight = 39;
 int forwardLeft = 18;
 int forwardRight = 16;
 int reverseLeft = 5;
 int reverseRight = 17;
-
-int greyMin = 60;
-int greyMinR = 50;
-int greyMax = 300;
-int blackMin = 1000;
-unsigned long timer1 = 0;
-unsigned long timer2 = 0;
-unsigned long timer3 = 0;
-unsigned long timer4 = 0;
-unsigned long timer5 = 0;
-unsigned long timer6 = 0;
-unsigned long timer7 = 0;
-unsigned long currentTime;
-String action = "";
 
 void setup() {
   Serial.begin(9600);
@@ -104,15 +89,11 @@ void setup() {
   webSocket.setReconnectInterval(5000);
   webSocket.enableHeartbeat(5000, 5000, 2);
 
-
-  //maze setup
-  setupMaze();
-
-
   pinMode(forwardLeft, OUTPUT);
   pinMode(forwardRight, OUTPUT);
   pinMode(reverseLeft, OUTPUT);
   pinMode(reverseRight, OUTPUT);
+  
   pinMode(ldrLeft, INPUT);
   pinMode(ldrRight, INPUT);
 }
@@ -240,28 +221,34 @@ void handleMessage(uint8_t *payload, int stageNumber) {
       robotStatus = "preparing_game";
     } else if(action == "start" && game == currentGame) {
       isStarting = true;
+      robotStatus = "in_game";
     } else if(action == "ended") {
-      robotStatus = "ready";
-      // Stop current game here.
-      isStarting = false;
-      isFinished = true;
+      finishGame();
     }
   }
 }
 
 void startGame() {
   if(currentGame == "maze") {
-    robotStatus = "in_game";
     startMaze();
   }
   
-  if(currentGame == "race") {
-    robotStatus = "in_game";
+  if(currentGame == "race") {\
     startRace();
   }
 
   if(currentGame == "butler") {
-    robotStatus = "in_game";
     Serial.println("Start butler");
   }
+}
+
+void finishGame() {
+  robotStatus = "finished";
+  currentGame = "";
+  acceleration = 0;
+  isStarting = false;
+  isDriving = false;
+  isFinished = false;
+  
+  stopVehicle();
 }
