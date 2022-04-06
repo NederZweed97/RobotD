@@ -50,11 +50,11 @@ void moveBackwards() {
 }
 
 void turnRight() {
-  drive(LOW, 225, LOW, LOW);
+  drive(LOW, 205, LOW, LOW);
 }
 
 void turnLeft() {
-  drive(225, LOW, LOW, LOW);
+  drive(205, LOW, LOW, LOW);
 }
 
 void stopVehicle() {
