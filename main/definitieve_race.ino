@@ -10,12 +10,12 @@ void startRace() {
   } 
 
   if(valueLdrLeft < 120 && valueLdrRight > 120) {
-    turnRight(255);
+    turnRight(205);
     isDriving = true;
   } 
 
   if(valueLdrLeft > 120 && valueLdrRight < 120) {
-    turnLeft(255);
+    turnLeft(205);
     isDriving = true;
   } 
   
