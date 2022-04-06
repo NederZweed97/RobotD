@@ -249,6 +249,7 @@ void finishGame() {
   isStarting = false;
   isDriving = false;
   isFinished = false;
+  isPreparing = false;
   
   stopVehicle();
 }
