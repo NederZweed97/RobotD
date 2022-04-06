@@ -31,11 +31,12 @@ unsigned long timer3 = 0;
 unsigned long timer4 = 0;
 unsigned long timer5 = 0;
 unsigned long timer6 = 0;
+unsigned long timer7 = 0;
 unsigned long currentTime;
 String action = "";
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   pinMode(forwardLeft, OUTPUT);
   pinMode(forwardRight, OUTPUT);
   pinMode(reverseLeft, OUTPUT);
@@ -64,12 +65,13 @@ drawText("INF1D",4);
 }
  
 void loop() {
+   display.clearDisplay(); 
   int sensorValueL = analogRead(sensorValueLeft);
   int sensorValueR = analogRead(sensorValueRight);
   currentTime = millis();
  
  //Displays left and right LDR values on screen.
-  display.setCursor(5, 10);
+  display.setCursor(15, 10);
   drawText("R: " + String(sensorValueR), 1);
  
   display.setCursor(15, 20);
@@ -102,27 +104,26 @@ if(action == "turnLeft"){
 }
 
 
-  if(sensorValueR < 60 && sensorValueL > 60)
-  { // CORRECT left
+  if(sensorValueR > 52 && sensorValueL < greyMin)
+  { // CORRECT right
+    action = "correctToRight";
+  }else if(sensorValueR < 52 && sensorValueL > greyMin)
+  { //CORRECT left
     action = "correctToLeft";
-  }else if(sensorValueR > 60 && sensorValueL < 60)
-  { //CORRECT right
-    action == "correctToRight";
-  } else if(sensorValueR < 60 && sensorValueL < 60) {
+  } else if(sensorValueR < 52 && sensorValueL < greyMin) {
     moveForward();
-  }else if(sensorValueR > 900 && sensorValueL > 900)
-  {
-    stopVehicle();
-  }else if(sensorValueR > 900 && sensorValueL < 60){//90 turn right
+  }else if(sensorValueR > blackMin && sensorValueL > blackMin){
+    action = "turnLeft";
+  } else if(sensorValueR > blackMin && sensorValueL < 400){//90 turn right
     action = "turnRight"; 
-  }else if(sensorValueR < 400 && sensorValueL > 900){ //90 turn left
-    action = "turnLeft";  
-  }else if(sensorValueR > 60 && sensorValueR < 400 && sensorValueL > 60 && sensorValueL < 400){
+  }else if(sensorValueR < 400 && sensorValueL > blackMin){ //90 turn left
+    action = "turnLeft";
+  }else if(sensorValueR > 75 && sensorValueR < 400 && sensorValueL > 70 && sensorValueL < 400){
       action = "uTurn";
   }
 
-  //sensorValueR > 50 && sensorValueR < 300 && sensorValueL > greyMin && sensorValueL < 300
-  display.clearDisplay(); 
+
+ 
 }
 
 // These are the functions that are used in the code above.
@@ -164,22 +165,22 @@ void correctToTheRight() {
     timer1 = millis();
     currentTime = millis();
   }
-  if(currentTime - timer1< 20){
-      drive(190, LOW, LOW, LOW);
+  if(currentTime - timer1 < 20){
+      drive(180, LOW, LOW, LOW);
   }else{
     timer1 = 0;
     action  = "";
   }
 }
 void correctToTheLeft() {
-    if(timer1 == 0){
-    timer1 = millis();
+    if(timer7 == 0){
+    timer7 = millis();
     currentTime = millis();
   }
-  if(currentTime - timer1 < 20){
-      drive(LOW, 190, LOW, LOW);
+  if(currentTime - timer7 < 20){
+      drive(LOW, 180, LOW, LOW);
   }else{
-    timer1 = 0;
+    timer7 = 0;
     action  = "";
   }
 }
@@ -197,18 +198,15 @@ void turnRight(){
       moveForward();
   }else if(currentTime - timer4< 740){
       stopVehicle();
-  }else if(currentTime - timer4< 920){
+  }else if(currentTime - timer4< 1120){
       moveForward();
-  }else if(currentTime - timer4< 1620){
+  }else if(currentTime - timer4< 1720){
       stopVehicle();
-  }else if(currentTime - timer4< 1627){
-    drive(190, LOW, LOW, 190);
-  }
-  else if(currentTime - timer4< 2817){
-       drive(175, LOW, LOW, 175);
-  }else if(currentTime - timer4< 2867){
+  }else if(currentTime - timer4< 2910){
+       drive(170, LOW, LOW, 170);
+  }else if(currentTime - timer4< 2960){
        moveForward();
-  }else if(currentTime - timer4< 2867){
+  }else if(currentTime - timer4< 2960){
        stopVehicle();
   }else{
     timer4 = 0;
@@ -225,15 +223,15 @@ void turnLeft(){
       moveForward();
   }else if(currentTime - timer5< 735){
       stopVehicle();
-  }else if(currentTime - timer5< 915){
+  }else if(currentTime - timer5< 1115){
       moveForward();
-  }else if(currentTime - timer5< 1615){
+  }else if(currentTime - timer5< 1715){
       stopVehicle();
-  }else if(currentTime - timer5< 2105){
-       drive(185, LOW, LOW, 185);
-  }else if(currentTime - timer5< 2155){
+  }else if(currentTime - timer5< 2915){
+       drive(LOW, 170, 170, LOW);
+  }else if(currentTime - timer5< 2955){
        moveForward();
-  }else if(currentTime - timer5< 2655){
+  }else if(currentTime - timer5< 2955){
        stopVehicle();
   }else{
     timer5 = 0;
