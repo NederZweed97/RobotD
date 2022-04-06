@@ -4,9 +4,6 @@ int valueLdrLeft = analogRead(ldrLeft);
 int valueLdrRight = analogRead(ldrRight);
 
 void startRace() {
-  int valueLdrLeft = analogRead(ldrLeft);
-  int valueLdrRight = analogRead(ldrRight);
-
   if(valueLdrLeft < 120 && valueLdrRight < 120 ) {
     moveForward();
     isDriving = true;
