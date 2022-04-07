@@ -18,8 +18,8 @@ String actionMaze = "";
 
 void startMaze() {
    display.clearDisplay(); 
-  int sensorValueL = analogRead(ldrLeft);
-  int sensorValueR = analogRead(ldrRight);
+  int sensorValueL = analogRead(ldrRight);
+  int sensorValueR = analogRead(ldrLeft);
   currentTime = millis();
 
 if(actionMaze == "correctToLeft"){
@@ -103,7 +103,7 @@ void correctToTheRight() {
     currentTime = millis();
   }
   if(currentTime - timer1 < 20){
-      drive(180, LOW, LOW, LOW);
+      drive(170, LOW, LOW, LOW);
   }else{
     timer1 = 0;
     actionMaze  = "";
@@ -115,7 +115,7 @@ void correctToTheLeft() {
     currentTime = millis();
   }
   if(currentTime - timer7 < 20){
-      drive(LOW, 180, LOW, LOW);
+      drive(LOW, 170, LOW, LOW);
   }else{
     timer7 = 0;
     actionMaze  = "";

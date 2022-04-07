@@ -233,7 +233,7 @@ void startGame() {
     startMaze();
   }
   
-  if(currentGame == "race") {\
+  if(currentGame == "race") {
     startRace();
   }
 
