@@ -80,8 +80,6 @@ void drawText(String value) {
   display.println(value);
 }
 
-
-
 void uTurn(){
   currentTime = millis();
   if(timer3 == 0){
@@ -161,7 +159,11 @@ void turnLeftMaze(){
   }else if(currentTime - timer5< 1715){
       stopVehicle();
   }else if(currentTime - timer5< 2915){
-       drive(LOW, 170, 170, LOW);
+       if(sensorValueL > blackMin){
+        moveForward(160,160);
+       }else{
+          drive(LOW, 170, 170, LOW);
+       }
   }else if(currentTime - timer5< 2955){
        moveForward(160, 160);
   }else if(currentTime - timer5< 2955){
