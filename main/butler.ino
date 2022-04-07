@@ -29,13 +29,17 @@ void butlerSetup() {
 }
 
 void startButler() {
-  VL53L0X_RangingMeasurementData_t measure;
-  lox.rangingTest(&measure, false);
-  if (measure.RangeMilliMeter >= 300) {
-    bDrive();
+  if (analogRead(ldrLeft) > 2000 && analogRead(ldrRight) > 2000) {
+    //Game won
   } else {
-    bBrake();
-    bSearch();
+    VL53L0X_RangingMeasurementData_t measure;
+    lox.rangingTest(&measure, false);
+    if (measure.RangeMilliMeter >= 300) {
+      bDrive();
+    } else {
+      bBrake();
+      bSearch();
+    }
   }
 }
 
@@ -65,6 +69,7 @@ void bDrive() {
 }
 
 void bBrake() {
+  if (isDriving) {
     analogWrite(forwardLeft, 0);
     analogWrite(forwardRight, 0);
     analogWrite(reverseLeft, 0);
@@ -72,6 +77,7 @@ void bBrake() {
     bStart = false;
     bReset = true;
     isDriving = false;
+  }
 }
 
 void bTurnRight() {
