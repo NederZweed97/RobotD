@@ -96,6 +96,8 @@ void setup() {
   
   pinMode(ldrLeft, INPUT);
   pinMode(ldrRight, INPUT);
+
+  butlerSetup();
 }
 
 void loop() {
@@ -238,7 +240,7 @@ void startGame() {
   }
 
   if(currentGame == "butler") {
-    Serial.println("Start butler");
+    startButler();
   }
 }
 
@@ -249,6 +251,7 @@ void finishGame() {
   isStarting = false;
   isDriving = false;
   isFinished = false;
+  isPreparing = false;
   
   stopVehicle();
 }
