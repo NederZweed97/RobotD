@@ -9,8 +9,8 @@ unsigned long timer6 = 0;
 unsigned long timer7 = 0;
 unsigned long currentTime;
 
-int greyMin = 60;
-int greyMinR = 50;
+int greyMin = 75;
+int greyMinR = 80;
 int greyMax = 300;
 int blackMin = 1000;
 
@@ -48,21 +48,21 @@ if(actionMaze== "turnLeft"){
 }
 
 
-  if(sensorValueR > 52 && sensorValueL < greyMin)
+  if(sensorValueR > greyMinR && sensorValueL < greyMin)
   { // CORRECT right
     actionMaze = "correctToRight";
-  }else if(sensorValueR < 52 && sensorValueL > greyMin)
+  }else if(sensorValueR < greyMinR && sensorValueL > greyMin)
   { //CORRECT left
     actionMaze = "correctToLeft";
-  } else if(sensorValueR < 52 && sensorValueL < greyMin) {
-    moveForward(160, 160);
+  } else if(sensorValueR < greyMinR && sensorValueL < greyMin) {
+    moveForward(155, 155);
   }else if(sensorValueR > blackMin && sensorValueL > blackMin){
     actionMaze = "turnLeft";
   } else if(sensorValueR > blackMin && sensorValueL < 400){//90 turn right
     actionMaze = "turnRight"; 
   }else if(sensorValueR < 400 && sensorValueL > blackMin){ //90 turn left
     actionMaze = "turnLeft";
-  }else if(sensorValueR > 75 && sensorValueR < 400 && sensorValueL > 70 && sensorValueL < 400){
+  }else if(sensorValueR > greyMinR && sensorValueR < 400 && sensorValueL > greyMin && sensorValueL < 400){
       actionMaze = "uTurn";
   }else if(sensorValueL < 15 && sensorValueR < 15){
     stopVehicle();
@@ -85,8 +85,8 @@ void uTurn(){
   if(timer3 == 0){
     timer3 = millis();
   }
-  if(currentTime - timer3< 850){
-        drive(LOW, 190, 190, LOW);
+  if(currentTime - timer3< 1200){
+        drive(LOW, 180, 180, LOW);
   }else if(currentTime - timer3< 1350){
       stopVehicle();
   }else{
@@ -100,7 +100,7 @@ void correctToTheRight() {
     timer1 = millis();
     currentTime = millis();
   }
-  if(currentTime - timer1 < 20){
+  if(currentTime - timer1 < 15){
       drive(170, LOW, LOW, LOW);
   }else{
     timer1 = 0;
@@ -112,7 +112,7 @@ void correctToTheLeft() {
     timer7 = millis();
     currentTime = millis();
   }
-  if(currentTime - timer7 < 20){
+  if(currentTime - timer7 < 15){
       drive(LOW, 170, LOW, LOW);
   }else{
     timer7 = 0;
@@ -125,19 +125,17 @@ void turnRightMaze(){
     timer4 = millis();
     currentTime = millis();
   }
-  if(currentTime - timer4 < 40){
-      moveForward(160, 160);
-  }else if(currentTime - timer4< 740){
+  if(currentTime - timer4 < 30){
+      moveForward(155, 155);
+  }else if(currentTime - timer4< 730){
       stopVehicle();
-  }else if(currentTime - timer4< 1120){
-      moveForward(160, 160);
-  }else if(currentTime - timer4< 1720){
+  }else if(currentTime - timer4< 1110){
+      moveForward(155, 155);
+  }else if(currentTime - timer4< 1710){
       stopVehicle();
-  }else if(currentTime - timer4< 2910){
+  }else if(currentTime - timer4< 2745){
        drive(170, LOW, LOW, 170);
-  }else if(currentTime - timer4< 2960){
-       moveForward(160, 160);
-  }else if(currentTime - timer4< 2960){
+  }else if(currentTime - timer4< 2805){
        stopVehicle();
   }else{
     timer4 = 0;
@@ -146,46 +144,32 @@ void turnRightMaze(){
 }
 
 void turnLeftMaze(){
+  int sensorValueL = analogRead(sensorValueLeft);
+  int sensorValueR = analogRead(sensorValueRight);
   if(timer5 == 0){
     timer5 = millis();
     currentTime = millis();
   }
-  if(currentTime - timer5 < 35){
-      moveForward(160, 160);
-  }else if(currentTime - timer5< 735){
+  if(currentTime - timer5 < 20){
+      moveForward(155, 155);
+  }else if(currentTime - timer5< 720){
       stopVehicle();
-  }else if(currentTime - timer5< 1115){
-      moveForward(160, 160);
-  }else if(currentTime - timer5< 1715){
+  }else if(currentTime - timer5< 1000){
+      moveForward(155, 155);
+  }else if(currentTime - timer5< 1700){
       stopVehicle();
-  }else if(currentTime - timer5< 2915){
-       if(sensorValueL > blackMin){
-        moveForward(160,160);
+  }else if(currentTime - timer5< 2105 and sensorValueL > blackMin){
+        moveForward(155, 155);
+  }else if(currentTime - timer5< 2695){
+       if(currentTime - timer5< 2110){
+        moveForward(155, 155);
        }else{
-          drive(LOW, 170, 170, LOW);
+       drive(LOW, 170, 170, LOW);
        }
-  }else if(currentTime - timer5< 2955){
-       moveForward(160, 160);
-  }else if(currentTime - timer5< 2955){
-       stopVehicle();
+  }else if(currentTime - timer5< 2755){
+       moveForward(155, 155);
   }else{
     timer5 = 0;
     actionMaze  = ""; 
-  }
-}
-
-
-void turnBackMaze(){
-  if(timer6 == 0){
-    timer6 = millis();
-    currentTime = millis();
-  }
-  if(currentTime - timer6< 400){
-      turnRightMaze();
-  }else if (currentTime = timer6 < 900){
-    moveForward(160, 160);
-  }else{
-    timer6 = 0;
-    actionMaze  = "";
   }
 }
