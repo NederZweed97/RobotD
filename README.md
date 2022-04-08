@@ -8,4 +8,4 @@ Hier zal alle code van de robot komen te staan.
 Main code van de robot staan in het mapje main.
 deze bestenden worden allemaal ingeladen tijdens het compilen en uploaden naar de arduino.
 
-De variablen ssid/password zouden veranderd moeten worden om de robot aan te sluiten op het netwerk.
+De variablen ssid/password zouden veranderd moeten worden om de robot te verbinden met het netwerk.
