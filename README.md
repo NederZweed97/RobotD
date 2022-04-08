@@ -15,3 +15,8 @@ De variablen ssid/password zouden veranderd moeten worden om de robot te verbind
 - Name: Adafruit SSD1306 Author: Adafruit
 - Name: Websockets Author: Markus Sattler
 - Name: ArduinoJson Author: Benoit Blanchon
+
+
+
+## Board Firware
+- Name: ESP32 Author: Espressif Systems
