@@ -20,6 +20,8 @@ bool bStart = false;
 
 bool bAgain = false;
 
+bool bFinishable = false;
+
 int bInterval = 0;
 
 void butlerSetup() {
@@ -29,8 +31,10 @@ void butlerSetup() {
 }
 
 void startButler() {
-  if (analogRead(ldrLeft) > 2000 && analogRead(ldrRight) > 2000) {
-    //Game won
+  if (analogRead(ldrLeft) > 1500 && analogRead(ldrRight) > 1500) {
+    if (bFinishable) {
+      isFinished();
+    }
   } else {
     VL53L0X_RangingMeasurementData_t measure;
     lox.rangingTest(&measure, false);
@@ -48,10 +52,7 @@ void bDrive() {
   bResetSearch = true;
   bResetReverse = true;
   if (bStart) {
-    analogWrite(forwardLeft, 0);
-    analogWrite(forwardRight, 0);
-    analogWrite(reverseLeft, 140);
-    analogWrite(reverseRight, 140);
+    drive(0, 0, 140, 140);
   } else {
     unsigned long bCurrentMillis = millis();
     if (bReset) {
@@ -61,51 +62,31 @@ void bDrive() {
     if (bCurrentMillis - bLastMillis >= 100) {
       bStart = true;
     }
-    analogWrite(forwardLeft, 0);
-    analogWrite(forwardRight, 0);
-    analogWrite(reverseLeft, 200);
-    analogWrite(reverseRight, 200);
+    drive(0, 0, 200, 200);
   }
 }
 
 void bBrake() {
   if (isDriving) {
-    analogWrite(forwardLeft, 0);
-    analogWrite(forwardRight, 0);
-    analogWrite(reverseLeft, 0);
-    analogWrite(reverseRight, 0);
+    stopVehicle();
     bStart = false;
     bReset = true;
     isDriving = false;
   }
 }
 
-void bTurnRight() {
-  analogWrite(forwardLeft, 0);
-  analogWrite(forwardRight, 175);
-  analogWrite(reverseLeft, 175);
-  analogWrite(reverseRight, 0);
-}
-
-void bTurnLeft() {
-  analogWrite(forwardLeft, 175);
-  analogWrite(forwardRight, 0);
-  analogWrite(reverseLeft, 0);
-  analogWrite(reverseRight, 175);
-}
-
 void bSearch() {
-
   VL53L0X_RangingMeasurementData_t measure;
   lox.rangingTest(&measure, false);
-
+  if (!bFinishable) {
+    bFinishable = true;
+  }
   if (bAgain) {
     bInterval = 1800;
     bAgain = false;
   } else {
     bInterval = 600;
   }
-
   unsigned long bCurrentMillisSearch = millis();
   if (bResetSearch) {
     bLastMillisSearch = bCurrentMillisSearch;
@@ -137,10 +118,10 @@ void bSearch() {
           return;
         }
       } else {
-        bTurnLeft();
+        drive(175, 0, 0, 175);
       }
     }
   } else {
-    bTurnRight();
+    drive(0, 175, 175, 0);
   }
 }
