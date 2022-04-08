@@ -17,7 +17,7 @@ De variablen ssid/password zouden veranderd moeten worden om de robot te verbind
 - Name: ArduinoJson Author: Benoit Blanchon
 - Name: ESP32 AnalogWrite Author: Abdelouahed ERROUAGUY
 
-## Board Firware
+## Board Firmware
 Download: https://dl.espressif.com/dl/package_esp32_index.json 
 
 Add in board manager:
