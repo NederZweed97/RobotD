@@ -16,34 +16,51 @@ bool bReset = false;
 bool bResetSearch = false;
 bool bResetReverse = false;
 
-bool bStart = false;
-
-bool bAgain = false;
-
-bool bFinishable = false;
-
-int bInterval = 0;
+bool bGo = true; //will only drive if true
+bool bStart = false; //will check if engines have startboosted
+bool bAgain = false; //Will turn true if first search gave no results
+bool bFinishable = false; //Will turn true after first search
+int bInterval = 0; //search turn interval
 
 void butlerSetup() {
   if (!lox.begin()) {
     while (1); // Infinite loop to stop the program from executing the rest of the code.
   }
+  // reset to inital values when preparing
+  bFirst = true;
+  bLastMillis = 0;
+  bLastMillisSearch = 0;
+  bLastMillisReverse = 0;
+  bReset = false;
+  bResetSearch = false;
+  bResetReverse = false;
+  bGo = true;
+  bStart = false;
+  bAgain = false;
+  bFinishable = false;
+  bInterval = 0;
 }
 
 void startButler() {
   if (analogRead(ldrLeft) > 1500 && analogRead(ldrRight) > 1500) {
     if (bFinishable) {
+      stopVehicle();
       robotStatus = "finished";
-    isDriving = false;
-    isFinished = true;
+      isDriving = false;
+      isFinished = true;
     }
   } else {
     VL53L0X_RangingMeasurementData_t measure;
     lox.rangingTest(&measure, false);
-    if (measure.RangeMilliMeter >= 300) {
-      bDrive();
+    if (bGo) {
+      if (measure.RangeMilliMeter >= 340) {
+        bDrive();
+      } else {
+        bGo = false;
+        bBrake();
+        bSearch();
+      }
     } else {
-      bBrake();
       bSearch();
     }
   }
@@ -54,7 +71,7 @@ void bDrive() {
   bResetSearch = true;
   bResetReverse = true;
   if (bStart) {
-    drive(0, 0, 140, 140);
+    drive(0, 0, 155, 155);
   } else {
     unsigned long bCurrentMillis = millis();
     if (bReset) {
@@ -64,7 +81,7 @@ void bDrive() {
     if (bCurrentMillis - bLastMillis >= 100) {
       bStart = true;
     }
-    drive(0, 0, 200, 200);
+    drive(0, 0, 210, 210);
   }
 }
 
@@ -84,10 +101,10 @@ void bSearch() {
     bFinishable = true;
   }
   if (bAgain) {
-    bInterval = 1800;
+    bInterval = 825;
     bAgain = false;
   } else {
-    bInterval = 600;
+    bInterval = 275;
   }
   unsigned long bCurrentMillisSearch = millis();
   if (bResetSearch) {
@@ -97,7 +114,8 @@ void bSearch() {
   if (bCurrentMillisSearch - bLastMillisSearch >= bInterval) {
     bBrake();
     int bScanOne = measure.RangeMilliMeter;
-    if (bScanOne >= 300) {
+    if (bScanOne >= 340) {
+      bGo = true;
       bResetSearch = true;
       return;
     } else {
@@ -106,10 +124,11 @@ void bSearch() {
         bLastMillisReverse = bCurrentMillisReverse;
         bResetReverse = false;
       }
-      if (bCurrentMillisReverse - bLastMillisReverse >= 1000) {
+      if (bCurrentMillisReverse - bLastMillisReverse >= bInterval*2.6) {
         bBrake();
         int bScanTwo = measure.RangeMilliMeter;
-        if (bScanTwo >= 300) {
+        if (bScanTwo >= 340) {
+          bGo = true;
           bResetSearch = true;
           bResetReverse = true;
           return;
@@ -120,10 +139,10 @@ void bSearch() {
           return;
         }
       } else {
-        drive(175, 0, 0, 175);
+        drive(200, 0, 0, 200);
       }
     }
   } else {
-    drive(0, 175, 175, 0);
+    drive(0, 200, 200, 0);
   }
 }
