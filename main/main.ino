@@ -261,7 +261,7 @@ void startGame() {
 }
 
 void stopGame() {
-  robotStatus = "stopped";
+  robotStatus = "ready";
   currentGame = "";
   acceleration = 0;
   isStarting = false;
