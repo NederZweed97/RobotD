@@ -57,6 +57,7 @@ int reverseRight = 17;
 String action = "ready";
 
 void setup() {
+  analogWrite(reverseLeft, LOW);
   Serial.begin(9600);
 
   // SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
@@ -96,8 +97,8 @@ void setup() {
 
 
 
-  //butler setup  
-   butlerSetup();
+  //butler setup
+  butlerSetup();
 
   pinMode(forwardLeft, OUTPUT);
   pinMode(forwardRight, OUTPUT);
@@ -112,24 +113,24 @@ void loop() {
 
   unsigned long currentMillis = millis();
 
-  if(currentMillis - previousMillis >= interval) {
+  if (currentMillis - previousMillis >= interval) {
     previousMillis = currentMillis;
 
-      doc.clear();
-      doc["status"] = robotStatus;
-      doc["isDriving"] = isDriving;
-      doc["acceleration"] = acceleration;
+    doc.clear();
+    doc["status"] = robotStatus;
+    doc["isDriving"] = isDriving;
+    doc["acceleration"] = acceleration;
 
-      char statusUpdate[100];
-      serializeJsonPretty(doc, statusUpdate);
+    char statusUpdate[100];
+    serializeJsonPretty(doc, statusUpdate);
 
-      webSocket.sendTXT(statusUpdate);
-      if(robotStatus=="finished"){
-        robotStatus = "ready";
-      }
+    webSocket.sendTXT(statusUpdate);
+    if (robotStatus == "finished") {
+      robotStatus = "ready";
+    }
   }
 
-  if(isPreparing) {
+  if (isPreparing) {
     doc.clear();
     doc["status"] = true;
     doc["game"] = currentGame;
@@ -139,10 +140,10 @@ void loop() {
 
     webSocket.sendTXT(prepStatus);
     robotStatus = "ready";
-    isPreparing = false;        
+    isPreparing = false;
   }
 
-  if(isStarting) {
+  if (isStarting) {
     startGame();
   }
 }
@@ -175,7 +176,7 @@ void webSocketEvent(WStype_t type, uint8_t *payload, size_t length) {
       doc["action"] = "login";
       doc["id"] = WiFi.macAddress();
       doc["status"] = "ready";
-      char data[100]; 
+      char data[100];
       serializeJsonPretty(doc, data);
 
       webSocket.sendTXT(data);
@@ -184,9 +185,9 @@ void webSocketEvent(WStype_t type, uint8_t *payload, size_t length) {
     case WStype_TEXT:
       Serial.println("[WS] server says: " + String((char * )payload));
 
-      if(!isLoggedIn) {
+      if (!isLoggedIn) {
         handleMessage(payload, 1);
-      } else if(!isPreparing){
+      } else if (!isPreparing) {
         handleMessage(payload, 2);
       }
       break;
@@ -207,13 +208,13 @@ void handleMessage(uint8_t *payload, int stageNumber) {
   DeserializationError err = deserializeJson(json, payload);
 
   if (err) {
-      Serial.print(F("deserializeJson() failed with code "));
-      Serial.println(err.c_str());
-      return;
+    Serial.print(F("deserializeJson() failed with code "));
+    Serial.println(err.c_str());
+    return;
   }
 
   // Logged in stage
-  if(stageNumber == 1) {
+  if (stageNumber == 1) {
     bool loggedin = json["loggedin"];
 
     if (loggedin) {
@@ -222,35 +223,38 @@ void handleMessage(uint8_t *payload, int stageNumber) {
   }
 
   // Preparing/Start/Ending stage
-  if(stageNumber == 2) {
+  if (stageNumber == 2) {
     String action = json["action"];
     String game = json["game"];
 
-    if(action == "prepare") {
+    if (action == "prepare") {
       // Prepare the game here.
       isPreparing = true;
       currentGame = game;
       robotStatus = "preparing_game";
-    } else if(action == "start" && game == currentGame) {
+      if (currentGame == "butler") {
+        butlerSetup();
+      }
+    } else if (action == "start" && game == currentGame) {
       isStarting = true;
-    } else if(action == "ended") {
+    } else if (action == "ended") {
       finishGame();
     }
   }
 }
 
 void startGame() {
-  if(currentGame == "maze") {
+  if (currentGame == "maze") {
     robotStatus = "in_game";
     startMaze();
   }
-  
-  if(currentGame == "race") {
+
+  if (currentGame == "race") {
     robotStatus = "in_game";
     startRace();
   }
 
-  if(currentGame == "butler") {
+  if (currentGame == "butler") {
     robotStatus = "in_game";
     startButler();
   }
