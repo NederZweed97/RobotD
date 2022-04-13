@@ -22,8 +22,8 @@ const char* ssid = "Wifi is saai";
 const char* password = "2much4u2day";
 
 // Websocket information here.
-const char host[] = "battlebot1.serverict.nl";
-const int port = 33003;
+const char host[] = "battlebot.oohnoo.nl";
+const int port = 3003;
 
 WiFiClient client;
 WebSocketsClient webSocket;
