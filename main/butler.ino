@@ -33,7 +33,9 @@ void butlerSetup() {
 void startButler() {
   if (analogRead(ldrLeft) > 1500 && analogRead(ldrRight) > 1500) {
     if (bFinishable) {
-      finishGame();
+      robotStatus = "finished";
+    isDriving = false;
+    isFinished = true;
     }
   } else {
     VL53L0X_RangingMeasurementData_t measure;

@@ -54,7 +54,7 @@ int reverseRight = 17;
 
 
 
-String action = "";
+String action = "ready";
 
 void setup() {
   Serial.begin(9600);
@@ -124,6 +124,9 @@ void loop() {
       serializeJsonPretty(doc, statusUpdate);
 
       webSocket.sendTXT(statusUpdate);
+      if(robotStatus=="finished"){
+        robotStatus = "ready";
+      }
   }
 
   if(isPreparing) {
@@ -261,6 +264,5 @@ void finishGame() {
   isDriving = false;
   isFinished = false;
   isPreparing = false;
-  
   stopVehicle();
 }

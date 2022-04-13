@@ -3,7 +3,7 @@
 void startRace() {
   int valueLdrLeft = analogRead(ldrLeft);
   int valueLdrRight = analogRead(ldrRight);
-
+  
   if(valueLdrLeft < 120 && valueLdrRight < 120 ) {
     moveForward(235, 235);
     isDriving = true;
@@ -26,6 +26,8 @@ void startRace() {
   //finished
   if(valueLdrLeft < 40 && valueLdrRight < 40){
     stopVehicle();
-    finishGame();
+    robotStatus = "finished";
+    isDriving = false;
+    isFinished = true;
   }
 }
