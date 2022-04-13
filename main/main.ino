@@ -238,7 +238,7 @@ void handleMessage(uint8_t *payload, int stageNumber) {
     } else if (action == "start" && game == currentGame) {
       isStarting = true;
     } else if (action == "ended") {
-      finishGame();
+      stopGame();
     }
   }
 }
@@ -260,8 +260,8 @@ void startGame() {
   }
 }
 
-void finishGame() {
-  robotStatus = "finished";
+void stopGame() {
+  robotStatus = "stopped";
   currentGame = "";
   acceleration = 0;
   isStarting = false;
@@ -269,4 +269,11 @@ void finishGame() {
   isFinished = false;
   isPreparing = false;
   stopVehicle();
+}
+
+void finishGame() {
+  stopVehicle();
+  robotStatus = "finished";
+  isDriving = false;
+  isFinished = true;
 }
