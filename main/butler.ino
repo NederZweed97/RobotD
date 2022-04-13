@@ -33,7 +33,7 @@ void butlerSetup() {
 void startButler() {
   if (analogRead(ldrLeft) > 1500 && analogRead(ldrRight) > 1500) {
     if (bFinishable) {
-      isFinished();
+      finishGame();
     }
   } else {
     VL53L0X_RangingMeasurementData_t measure;

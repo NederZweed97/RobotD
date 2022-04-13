@@ -35,7 +35,7 @@ bool isPreparing = false;
 bool isStarting = false;
 bool isFinished = false;
 
-// These values have to be update by the game script.
+// These values have to be< update by the game script.
 String currentGame = "";
 String robotStatus = "preparing";
 bool isDriving = false;
@@ -52,18 +52,8 @@ int forwardRight = 16;
 int reverseLeft = 5;
 int reverseRight = 17;
 
-int greyMin = 60;
-int greyMinR = 50;
-int greyMax = 300;
-int blackMin = 1000;
-unsigned long timer1 = 0;
-unsigned long timer2 = 0;
-unsigned long timer3 = 0;
-unsigned long timer4 = 0;
-unsigned long timer5 = 0;
-unsigned long timer6 = 0;
-unsigned long timer7 = 0;
-unsigned long currentTime;
+
+
 String action = "";
 
 void setup() {
@@ -105,8 +95,6 @@ void setup() {
   webSocket.enableHeartbeat(5000, 5000, 2);
 
 
-  //maze setup
-  setupMaze();
 
   //butler setup  
    butlerSetup();

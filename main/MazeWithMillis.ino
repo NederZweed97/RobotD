@@ -144,8 +144,8 @@ void turnRightMaze(){
 }
 
 void turnLeftMaze(){
-  int sensorValueL = analogRead(sensorValueLeft);
-  int sensorValueR = analogRead(sensorValueRight);
+  int sensorValueL = analogRead(sensorValueL);
+  int sensorValueR = analogRead(sensorValueR);
   if(timer5 == 0){
     timer5 = millis();
     currentTime = millis();
